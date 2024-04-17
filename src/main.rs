@@ -15,30 +15,23 @@ fn main() {
 
     for event in events {
         match event {
-            Ok(event) => {
-                match event {
-                    mpris::Event::TrackChanged(metadata) => {
-                        if !metadata.art_url().unwrap().is_empty()&&metadata.track_id().is_some()&&!metadata.title().unwrap().is_empty()&&metadata.art_url().unwrap() != "file:///tmp/.com.google.Chrome.LgcuGt"{
-                            /*println!("{:?}",metadata);
-                            let _ = Notification::new()
-                                .summary("Now playing",)
-                                .body(metadata.title().unwrap())
-                                .icon(metadata.art_url().unwrap())
-                                .show();*/
-                            let _ = Notification::new()
-                                .summary("Now playing",)
-                                .body(metadata.title().unwrap())
-                                .icon(metadata.art_url().unwrap())
-                                .show();
-                            println!("{:?}",metadata)
-                        }
-                        else {
-                            println!("{:?}",metadata)
-                        };
-                        
-                    },
+            Ok(event) => match event {
+                mpris::Event::TrackChanged(metadata) => {
+                    if !metadata.art_url().unwrap().is_empty()
+                        && metadata.track_id().is_some()
+                        && !metadata.title().unwrap().is_empty()
+                    {
+                        let _ = Notification::new()
+                            .summary("Now playing")
+                            .body(metadata.title().unwrap())
+                            .icon("emblem-music-symbolic")
+                            .show();
+                    } else {
+                        continue;
+                    };
+                }
                 _ => {}
-                }},
+            },
             Err(err) => {
                 println!("D-Bus error: {}. Aborting.", err);
                 break;
@@ -48,5 +41,3 @@ fn main() {
 
     println!("Event stream ended.");
 }
-
-
